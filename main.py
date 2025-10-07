@@ -22,21 +22,30 @@ PLAYER_VEL = 5
 # window
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 
-def get_backgound(name):
+# get background function
+def get_background(name):
     image = pygame.image.load(join("assets", "Background", name))
     _, _, width, height = image.get_rect()
     tiles = []
 
     for i in range(WIDTH // width + 1):
         for j in range(HEIGHT // height + 1):
-            pos = [i * width, j * height]
+            pos = (i * width, j * height)
             tiles.append(pos)
     
     return tiles, image
 
+# draw function
+def draw(window, background, bg_image):
+    for tile in background:
+        window.blit(bg_image, tile)
+
+    pygame.display.update()
+
 
 def main(window):
     clock = pygame.time.Clock()
+    background, bg_image = get_background("Green.png")
 
     running = True
     while running:
@@ -46,6 +55,9 @@ def main(window):
             if event.type == pygame.QUIT:
                 running = False
                 break
+        
+        # background
+        draw(window, background, bg_image)
 
     pygame.quit()
     quit()
