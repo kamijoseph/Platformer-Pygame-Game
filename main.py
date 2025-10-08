@@ -73,16 +73,25 @@ def get_background(name):
     return tiles, image
 
 # draw function
-def draw(window, background, bg_image):
+def draw(window, background, bg_image, player):
     for tile in background:
         window.blit(bg_image, tile)
+    
+    # drawing the player
+    player.draw(window)
 
     pygame.display.update()
 
 
 def main(window):
+    # clock
     clock = pygame.time.Clock()
+
+    # background
     background, bg_image = get_background("Green.png")
+
+    # player
+    player = Player(100, 100, 50, 50)
 
     running = True
     while running:
@@ -94,7 +103,7 @@ def main(window):
                 break
         
         # background
-        draw(window, background, bg_image)
+        draw(window, background, bg_image, player)
 
     pygame.quit()
     quit()
