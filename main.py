@@ -22,6 +22,29 @@ PLAYER_VEL = 5
 # window
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 
+# player
+class Player(pygame.sprite.Sprite):
+    COLOR = (255, 255, 255)
+
+    def __init__(self, x, y, width, height):
+        self.rect = pygame.Rect(x, y, width, height)
+        self.x_vel = 0
+        self.y_vel = 0
+        self.mask = None
+    
+    # players movement
+    def move(self, dx, dy):
+        self.rect.x += dx
+        self.rect.y += dy
+
+    # move left
+    def move_left(self, vel):
+        self.x_vel = -vel
+
+    # move right
+    def move_right(self, vel):
+        self.x_vel = vel
+
 # get background function
 def get_background(name):
     image = pygame.image.load(join("assets", "Background", name))
