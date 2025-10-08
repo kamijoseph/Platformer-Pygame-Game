@@ -24,7 +24,7 @@ window = pygame.display.set_mode((WIDTH, HEIGHT))
 
 # player
 class Player(pygame.sprite.Sprite):
-    COLOR = (255, 255, 255)
+    COLOR = (255, 0, 0)
 
     def __init__(self, x, y, width, height):
         self.rect = pygame.Rect(x, y, width, height)
@@ -82,6 +82,16 @@ def draw(window, background, bg_image, player):
 
     pygame.display.update()
 
+# handle movements function
+def handle_movement(player):
+    player.x_vel = 0
+    keys = pygame.key.get_pressed()
+
+    if keys[pygame.K_LEFT]:
+        player.move_left(PLAYER_VEL)
+    if keys[pygame.K_RIGHT]:
+        player.move_right(PLAYER_VEL)
+
 
 def main(window):
     # clock
@@ -102,7 +112,11 @@ def main(window):
                 running = False
                 break
         
-        # background
+        # players movement
+        player.loop(FPS)
+        handle_movement(player)
+
+        # draw stuff
         draw(window, background, bg_image, player)
 
     pygame.quit()
