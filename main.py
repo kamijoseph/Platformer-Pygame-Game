@@ -54,6 +54,12 @@ def load_sprite_sheets(dir1, dir2, width, height, direction=False):
 class Player(pygame.sprite.Sprite):
     COLOR = (255, 0, 0)
     GRAVITY = 1
+    SPRITES = load_sprite_sheets(
+        "MainCharacters",
+        "NinjaFrog",
+        32, 32,
+        True
+    )
 
     def __init__(self, x, y, width, height):
         self.rect = pygame.Rect(x, y, width, height)
@@ -89,7 +95,8 @@ class Player(pygame.sprite.Sprite):
         self.fall_count += 1
     
     def draw(self, win):
-        pygame.draw.rect(win, self.COLOR, self.rect)
+        self.sprite = self.SPRITES["idle_" + self.direction][0]
+        win.blit(self.sprite, (self.rect.x, self.rect.y))
 
 # get background function
 def get_background(name):
