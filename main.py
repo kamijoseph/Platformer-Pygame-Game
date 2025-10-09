@@ -146,7 +146,7 @@ class Objects(pygame.sprite.Sprite):
 class Block(Objects):
     def __init__(self, x, y, size):
         super().__init__(x, y, size, size)
-        block = load_block(size)
+        block = get_block(size)
         self.image.blit(block, (0, 0))
         self.mask = pygame.mask.from_surface(self.image)
 
@@ -166,9 +166,12 @@ def get_background(name):
     return tiles, image
 
 # draw function
-def draw(window, background, bg_image, player):
+def draw(window, background, bg_image, player, objects):
     for tile in background:
         window.blit(bg_image, tile)
+
+    for object in objects:
+        object.draw(window)
     
     # drawing the player
     player.draw(window)
@@ -196,6 +199,10 @@ def main(window):
     # player
     player = Player(100, 100, 50, 50)
 
+    # blocks
+    block_size = 96
+    blocks = [Block(0, HEIGHT - block_size, block_size)]
+
     running = True
     while running:
         clock.tick(FPS)
@@ -210,7 +217,7 @@ def main(window):
         handle_movement(player)
 
         # draw stuff
-        draw(window, background, bg_image, player)
+        draw(window, background, bg_image, player, blocks)
 
     pygame.quit()
     quit()
