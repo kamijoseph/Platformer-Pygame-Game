@@ -238,8 +238,8 @@ def collide(player, objects, dx):
 # handle movements function
 def handle_movement(player, objects):
     player.x_vel = 0
-    collide_left = collide(player, objects, -PLAYER_VEL )
-    collide_right = collide(player, objects, PLAYER_VEL)
+    collide_left = collide(player, objects, -PLAYER_VEL * 2)
+    collide_right = collide(player, objects, PLAYER_VEL * 2)
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT] and not collide_left:
