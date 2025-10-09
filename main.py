@@ -101,10 +101,21 @@ class Player(pygame.sprite.Sprite):
             self.animation_count = 0
     
     def loop(self, fps):
-        # self.y_vel += min(1, (self.fall_count / fps) * self.GRAVITY)
+        self.y_vel += min(1, (self.fall_count / fps) * self.GRAVITY)
         self.move(self.x_vel, self.y_vel)
         self.fall_count += 1
         self.update_sprite()
+
+    # landing function
+    def landed(self):
+        self.fall_count = 0
+        self.y_vel = 0
+        self.jump_count = 0
+
+    # hit head function
+    def hit_head(self):
+        self.count = 0
+        self.y_vel *= -1
 
     def update_sprite(self):
         sprite_sheet = "idle"
@@ -190,11 +201,11 @@ def handle_vertical_collision(player, objects, dy):
                 player.rect.top = object.rect.top
                 player.hit_head()
         collided_objects.append(object)
-        
+
     return collided_objects
 
 # handle movements function
-def handle_movement(player):
+def handle_movement(player, objects):
     player.x_vel = 0
     keys = pygame.key.get_pressed()
 
@@ -202,6 +213,9 @@ def handle_movement(player):
         player.move_left(PLAYER_VEL)
     if keys[pygame.K_RIGHT]:
         player.move_right(PLAYER_VEL)
+
+    # vertical collisions
+    handle_vertical_collision(player, objects, player.y_vel)
 
 
 def main(window):
@@ -229,7 +243,7 @@ def main(window):
         
         # players movement
         player.loop(FPS)
-        handle_movement(player)
+        handle_movement(player, floor)
 
         # draw stuff
         draw(window, background, bg_image, player, floor)
