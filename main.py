@@ -178,6 +178,21 @@ def draw(window, background, bg_image, player, objects):
 
     pygame.display.update()
 
+# vertical collision
+def handle_vertical_collision(player, objects, dy):
+    collided_objects = []
+    for object in objects:
+        if pygame.sprite.collide_mask(player, object):
+            if dy > 0:
+                player.rect.bottom = object.rect.top
+                player.landed()
+            elif dy < 0:
+                player.rect.top = object.rect.top
+                player.hit_head()
+        collided_objects.append(object)
+        
+    return collided_objects
+
 # handle movements function
 def handle_movement(player):
     player.x_vel = 0
