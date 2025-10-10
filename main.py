@@ -183,7 +183,7 @@ class Fire(Objects):
     ANIMATION_DELAY = 3
 
     def __init__(self, x, y, width, height):
-        super().__init__(self, x, y, width, height, "fire")
+        super().__init__(x, y, width, height, "fire")
         self.fire = load_sprite_sheets("Traps", "fire", width, height)
         self.image = self.fire["off"][0]
         self.mask = pygame.mask.from_surface(self.image)
@@ -295,13 +295,16 @@ def main(window):
     # player
     player = Player(100, 100, 50, 50)
 
-    # floor
+    # objetcs, fllor and fire
     block_size = 96
     floor = [Block(i * block_size, HEIGHT - block_size, block_size) for i in range(-WIDTH // block_size, WIDTH * 2 // block_size)]
+    fire = Fire(100, HEIGHT - block_size - 64, 16, 32)
+    fire.on()
     objects = [
         *floor,
         Block(0, HEIGHT - block_size * 2, block_size),
-        Block(block_size * 3, HEIGHT - block_size * 4, block_size)
+        Block(block_size * 3, HEIGHT - block_size * 4, block_size),
+        fire
     ]
 
     offset_x = 0
