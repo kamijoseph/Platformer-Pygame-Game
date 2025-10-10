@@ -207,7 +207,7 @@ class Fire(Objects):
         self.image = sprites[sprite_index]
         self.animation_count += 1
 
-        self.rect = self.sprite.get_rect(topleft=(self.rect.x, self.rect.y))
+        self.rect = self.image.get_rect(topleft=(self.rect.x, self.rect.y))
         self.mask = pygame.mask.from_surface(self.sprite)
 
         if self.animation_count // self.ANIMATION_DELAY > len(sprites):
@@ -326,6 +326,9 @@ def main(window):
         # players movement
         player.loop(FPS)
         handle_movement(player, objects)
+
+        # fire
+        fire.loop()
 
         # draw stuff
         draw(window, background, bg_image, player, objects, offset_x)
