@@ -178,6 +178,13 @@ class Block(Objects):
         self.image.blit(block, (0, 0))
         self.mask = pygame.mask.from_surface(self.image)
 
+
+class Fire(object):
+    def __init__(self, x, y, width, height):
+        super().__init__(self, x, y, width, height, "fire")
+        self.fire = load_sprite_sheets("Traps", "fire", width, height)
+
+
     
 
 # get background function
