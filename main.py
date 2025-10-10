@@ -184,7 +184,7 @@ class Fire(Objects):
 
     def __init__(self, x, y, width, height):
         super().__init__(x, y, width, height, "fire")
-        self.fire = load_sprite_sheets("Traps", "fire", width, height)
+        self.fire = load_sprite_sheets("Traps", "Fire", width, height)
         self.image = self.fire["off"][0]
         self.mask = pygame.mask.from_surface(self.image)
         self.animation_count = 0
@@ -195,7 +195,7 @@ class Fire(Objects):
         self.animation_name = "on"
 
     # fire off
-    def pff(self):
+    def off(self):
         self.animation_name = "off"
 
     def loop(self):
@@ -249,7 +249,7 @@ def handle_vertical_collision(player, objects, dy):
                 player.rect.bottom = object.rect.top
                 player.landed()
             elif dy < 0:
-                player.rect.top = object.rect.top
+                player.rect.top = object.rect.bottom
                 player.hit_head()
         collided_objects.append(object)
 
@@ -298,7 +298,7 @@ def main(window):
     # objetcs, fllor and fire
     block_size = 96
     floor = [Block(i * block_size, HEIGHT - block_size, block_size) for i in range(-WIDTH // block_size, WIDTH * 2 // block_size)]
-    fire = Fire(100, HEIGHT - block_size - 64, 16, 32)
+    fire = Fire(200, HEIGHT - block_size - 64, 16, 32)
     fire.on()
     objects = [
         *floor,
