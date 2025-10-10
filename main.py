@@ -81,6 +81,8 @@ class Player(pygame.sprite.Sprite):
         self.animation_count = 0
         self.fall_count = 0
         self.jump_count = 0
+        self.hit = False
+        self.hit_count = 0
 
     # player jumping
     def jump(self):
@@ -94,6 +96,10 @@ class Player(pygame.sprite.Sprite):
     def move(self, dx, dy):
         self.rect.x += dx
         self.rect.y += dy
+
+    def make_hit(self):
+        self.hit = True
+        self.hit_count = 0
 
     # move left
     def move_left(self, vel):
@@ -112,6 +118,13 @@ class Player(pygame.sprite.Sprite):
     def loop(self, fps):
         self.y_vel += min(1, (self.fall_count / fps) * self.GRAVITY)
         self.move(self.x_vel, self.y_vel)
+
+        if self.hit:
+            self.hit_count += 1
+        if self.hit_count > fps * 2:
+            self.hit = False
+            self.hit_count = 0
+
         self.fall_count += 1
         self.update_sprite()
 
@@ -129,8 +142,11 @@ class Player(pygame.sprite.Sprite):
     def update_sprite(self):
         sprite_sheet = "idle"
 
+        if self.hit:
+            sprite_sheet = "hit"
+
         # jumping, falling and running animations
-        if self.y_vel < 0:
+        elif self.y_vel < 0:
             if self.jump_count == 1:
                 sprite_sheet = "jump"
             elif self.jump_count == 2:
@@ -201,14 +217,14 @@ class Fire(Objects):
     def loop(self):
         sprites = self.fire[self.animation_name]
         sprite_index = (
-            self.animation_index // self.ANIMATION_DELAY
+            self.animation_count // self.ANIMATION_DELAY
         ) % len(sprites)
 
         self.image = sprites[sprite_index]
         self.animation_count += 1
 
         self.rect = self.image.get_rect(topleft=(self.rect.x, self.rect.y))
-        self.mask = pygame.mask.from_surface(self.sprite)
+        self.mask = pygame.mask.from_surface(self.image)
 
         if self.animation_count // self.ANIMATION_DELAY > len(sprites):
             self.animation_count = 0
@@ -251,7 +267,8 @@ def handle_vertical_collision(player, objects, dy):
             elif dy < 0:
                 player.rect.top = object.rect.bottom
                 player.hit_head()
-        collided_objects.append(object)
+                
+            collided_objects.append(object)
 
     return collided_objects
 
@@ -282,7 +299,11 @@ def handle_movement(player, objects):
         player.move_right(PLAYER_VEL)
 
     # vertical collisions
-    handle_vertical_collision(player, objects, player.y_vel)
+    vertical_collide = handle_vertical_collision(player, objects, player.y_vel)
+    to_check = [collide_left, collide_right, *vertical_collide]
+    for object in to_check:
+        if object and object.name == "fire":
+            player.make_hit()
 
 
 def main(window):
@@ -298,7 +319,7 @@ def main(window):
     # objetcs, fllor and fire
     block_size = 96
     floor = [Block(i * block_size, HEIGHT - block_size, block_size) for i in range(-WIDTH // block_size, WIDTH * 2 // block_size)]
-    fire = Fire(200, HEIGHT - block_size - 64, 16, 32)
+    fire = Fire(300, HEIGHT - block_size - 64, 16, 32)
     fire.on()
     objects = [
         *floor,
