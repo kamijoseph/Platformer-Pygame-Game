@@ -179,13 +179,40 @@ class Block(Objects):
         self.mask = pygame.mask.from_surface(self.image)
 
 
-class Fire(object):
+class Fire(Objects):
+    ANIMATION_DELAY = 3
+
     def __init__(self, x, y, width, height):
         super().__init__(self, x, y, width, height, "fire")
         self.fire = load_sprite_sheets("Traps", "fire", width, height)
-
-
+        self.image = self.fire["off"][0]
+        self.mask = pygame.mask.from_surface(self.image)
+        self.animation_count = 0
+        self.animation_name = "fire"
     
+    # fire on function
+    def on(self):
+        self.animation_name = "on"
+
+    # fire off
+    def pff(self):
+        self.animation_name = "off"
+
+    def loop(self):
+        sprites = self.fire[self.animation_name]
+        sprite_index = (
+            self.animation_index // self.ANIMATION_DELAY
+        ) % len(sprites)
+
+        self.image = sprites[sprite_index]
+        self.animation_count += 1
+
+        self.rect = self.sprite.get_rect(topleft=(self.rect.x, self.rect.y))
+        self.mask = pygame.mask.from_surface(self.sprite)
+
+        if self.animation_count // self.ANIMATION_DELAY > len(sprites):
+            self.animation_count = 0
+
 
 # get background function
 def get_background(name):
